@@ -1,0 +1,122 @@
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Animações e Estilos Customizados */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes cardEnter {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes modalEnter {
+  from { opacity: 0; transform: translate(-50%, -40%) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes modalExit {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to { opacity: 0; transform: translate(-50%, -40%) scale(0.95); }
+}
+
+
+/* --- ESTILOS DO POP-UP (NOVO) --- */
+/* Fundo semi-transparente (backdrop) */
+.toast::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.6); /* bg-slate-900 com opacidade */
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+.toast.fade-out::before {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+/* Caixa do Pop-up */
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  color: white;
+  z-index: 1001;
+  animation: modalEnter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  min-width: 320px;
+  max-width: 90%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 500;
+}
+.toast.fade-out {
+  animation: modalExit 0.3s ease-in forwards;
+}
+
+/* Ícones para o pop-up (usando Font Awesome) */
+.toast::after {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  display: block;
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+.toast.success::after {
+  content: '\f058'; /* fa-circle-check */
+  color: #a7f3d0;
+}
+.toast.error::after {
+  content: '\f071'; /* fa-triangle-exclamation */
+  color: #fecaca;
+}
+
+/* Cores de fundo do pop-up */
+.toast.success { background-color: #16a34a; } /* bg-green-600 */
+.toast.error { background-color: #dc2626; } /* bg-red-600 */
+/* --- FIM DOS ESTILOS DO POP-UP --- */
+
+
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border-left-color: #fff;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilos do Modal com transição */
+.modal-backdrop {
+  transition: opacity 0.3s ease;
+}
+.modal-content {
+  transition: transform 0.3s ease;
+}
+.modal-backdrop.hidden .modal-content {
+  transform: scale(0.95) translateY(-20px);
+}
+
+/* Efeito de animação para os cards */
+.client-card {
+  animation: cardEnter 0.4s ease-out backwards;
+}

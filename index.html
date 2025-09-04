@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBX CloudConnect | Cadastro de Clientes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Adiciona a configuração para habilitar o modo escuro manual no Tailwind CSS
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="text-slate-800 bg-slate-100 dark:bg-slate-900 dark:text-slate-300 transition-colors duration-300">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl relative">
+        <div class="absolute top-4 right-4 md:top-6 md:right-6 z-10">
+            <button id="theme-toggle" class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 shadow-md flex items-center justify-center transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-slate-900 transform hover:scale-110">
+                <i class="fas fa-sun text-xl"></i> <!-- Sun icon for light mode -->
+                <i class="fas fa-moon text-xl hidden"></i> <!-- Moon icon for dark mode -->
+            </button>
+        </div>
+
+        <header class="text-center mb-10">
+             <div class="inline-block bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-4 rounded-full shadow-lg mb-4">
+                <i class="fas fa-cloud fa-2x"></i>
+            </div>
+            <h1 class="text-5xl font-bold text-slate-900 dark:text-white">DBX Clients</h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-2 text-lg">Gerenciador de Clientes com a simplicidade da nuvem.</p>
+        </header>
+
+        <!-- Formulário de Cadastro -->
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg mb-10 transition-shadow hover:shadow-2xl">
+            <h2 class="text-2xl font-semibold mb-6 flex items-center text-slate-900 dark:text-white"><i class="fas fa-user-plus mr-3 text-blue-500 dark:text-blue-400"></i>Adicionar Novo Cliente</h2>
+            <form id="client-form">
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="relative">
+                         <i class="fas fa-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="nome" name="nome" required placeholder="Nome completo" class="pl-10 w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md text-sm shadow-sm placeholder-slate-400 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                    <div class="relative">
+                         <i class="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="email" id="email" name="email" required placeholder="E-mail" class="pl-10 w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md text-sm shadow-sm placeholder-slate-400 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                     <div class="relative">
+                         <i class="fas fa-phone absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="tel" id="telefone" name="telefone" required placeholder="Telefone" class="pl-10 w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md text-sm shadow-sm placeholder-slate-400 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                </div>
+                <div class="mt-6 text-right">
+                    <button type="submit" class="inline-flex items-center justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-transform transform hover:scale-105">
+                        <i class="fas fa-plus mr-2"></i> Adicionar Cliente
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Área de Exibição dos Clientes -->
+        <div>
+            <h2 class="text-3xl font-semibold mb-6 text-slate-900 dark:text-white">Clientes Cadastrados</h2>
+            <div id="clients-list-container" class="min-h-[200px]">
+                <!-- O conteúdo será injetado pelo JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição (inicialmente oculto) -->
+    <div id="edit-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden opacity-0">
+        <div class="modal-content bg-white dark:bg-slate-800 p-8 rounded-lg shadow-2xl w-full max-w-md transform scale-95">
+            <h2 class="text-2xl font-semibold mb-6 text-slate-900 dark:text-white">Editar Cliente</h2>
+            <form id="edit-client-form">
+                <input type="hidden" id="edit-id" name="id">
+                <div class="space-y-4">
+                    <div>
+                        <label for="edit-nome" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Nome</label>
+                        <input type="text" id="edit-nome" name="nome" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md text-sm shadow-sm placeholder-slate-400 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="edit-email" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Email</label>
+                        <input type="email" id="edit-email" name="email" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md text-sm shadow-sm placeholder-slate-400 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="edit-telefone" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Telefone</label>
+                        <input type="tel" id="edit-telefone" name="telefone" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md text-sm shadow-sm placeholder-slate-400 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-end gap-4">
+                    <button type="button" id="cancel-edit" class="py-2 px-4 border border-slate-300 dark:border-slate-600 text-sm font-medium rounded-md text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                        <i class="fas fa-save mr-2"></i> Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
+
